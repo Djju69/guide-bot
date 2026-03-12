@@ -40,4 +40,5 @@
 
 - Реализован Шаг 3: `api/webhook.ts` по порядку из ТЗ (проверка `X-Telegram-Bot-Api-Secret-Token`, мгновенный `200`, затем callback-заглушка / QStash / ответ на нетекст).
 - Добавлена минимальная заглушка `api/process.ts`: отправляет пользователю «⏳ Изучаю информацию...», чтобы проверить цепочку Telegram → Vercel → QStash → пользователь.
+- Обновлён build под Vercel: `tsc` теперь **делает emit** (в `dist/`), `noEmit: false`, добавлен `outDir: "dist"`.
 

@@ -7,13 +7,12 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    // Типы grammY в текущей версии ожидают адаптер строкой,
-    // поэтому явно указываем std/http и глушим типизацию.
-    const handleUpdate = (webhookCallback as any)(bot, "std/http")
+    // Для Vercel Node.js используем http-адаптер grammY.
+    const handleUpdate = (webhookCallback as any)(bot, "http")
     return await handleUpdate(req, res)
   } catch (err) {
     console.error("Webhook Error:", err)
-    return res.status(500).send("Internal Error")
+    return res.status(200).send("Error")
   }
 }
 

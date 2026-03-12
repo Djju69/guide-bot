@@ -1,21 +1,15 @@
 {
   "version": 2,
-  "outputDirectory": "dist",
-  "builds": [
-    {
-      "src": "api/**/*.ts",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    }
+  "rewrites": [
+    { "source": "/api/webhook", "destination": "/api/webhook.ts" }
   ],
   "functions": {
-    "api/webhook.ts": { "maxDuration": 10 },
-    "api/process.ts": { "maxDuration": 10 }
+    "api/webhook.ts": {
+      "runtime": "@vercel/node"
+    },
+    "api/process.ts": {
+      "runtime": "@vercel/node"
+    }
   }
 }
 

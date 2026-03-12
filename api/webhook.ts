@@ -7,7 +7,9 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const handleUpdate = webhookCallback(bot)
+    // Типы grammY в текущей версии ожидают адаптер строкой,
+    // поэтому явно указываем std/http и глушим типизацию.
+    const handleUpdate = (webhookCallback as any)(bot, "std/http")
     return await handleUpdate(req, res)
   } catch (err) {
     console.error("Webhook Error:", err)

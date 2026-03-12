@@ -1,5 +1,18 @@
 {
+  "version": 2,
   "outputDirectory": "dist",
+  "builds": [
+    {
+      "src": "api/**/*.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    }
+  ],
   "functions": {
     "api/webhook.ts": { "maxDuration": 10 },
     "api/process.ts": { "maxDuration": 10 }

@@ -1,14 +1,16 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/api/webhook", "destination": "/api/webhook.ts" }
+    { "source": "/api/webhook", "destination": "/api/webhook" }
   ],
   "functions": {
     "api/webhook.ts": {
-      "runtime": "@vercel/node"
+      "runtime": "nodejs22.x",
+      "maxDuration": 10
     },
     "api/process.ts": {
-      "runtime": "@vercel/node"
+      "runtime": "nodejs22.x",
+      "maxDuration": 10
     }
   }
 }

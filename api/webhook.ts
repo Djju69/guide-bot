@@ -14,6 +14,13 @@ async function handleCallback(_callbackQuery: unknown): Promise<void> {
   // Заглушка — реализуем на шаге с inline-кнопками
 }
 
+function getProcessUrl(): string {
+  const raw = process.env.VERCEL_URL
+  if (!raw) throw new Error("VERCEL_URL is required")
+  const base = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`
+  return `${base.replace(/\/+$/, "")}/api/process`
+}
+
 export default async function handler(req: any, res: any) {
   const secret =
     req.headers?.["x-telegram-bot-api-secret-token"] ??
@@ -25,32 +32,32 @@ export default async function handler(req: any, res: any) {
 
   const update = req.body as TelegramUpdate
 
-  // ВАЖНО: ответить Telegram сразу, до любой тяжёлой работы
-  res.status(200).json({ ok: true })
-
-  void (async () => {
-    try {
-      if (update.callback_query) {
-        await handleCallback(update.callback_query)
-        return
-      }
-
-      if (update.message?.text) {
-        const qstash = new Client({ token: process.env.QSTASH_TOKEN! })
-        await qstash.publishJSON({
-          url: `${process.env.VERCEL_URL}/api/process`,
-          body: { update },
-        })
-        return
-      }
-
-      // message есть, но не текст (фото/стикер/голосовое и т.п.)
-      if (update.message?.chat?.id) {
-        await sendMessage(update.message.chat.id, "✍️ Напишите название места текстом")
-      }
-    } catch {
-      // Здесь намеренно молчим: webhook уже ответил 200, а логирование добавим позже
+  try {
+    // callback_query обрабатываем здесь (быстро, < 1 сек)
+    if (update.callback_query) {
+      await handleCallback(update.callback_query)
+      return res.status(200).json({ ok: true })
     }
-  })()
+
+    // Текст — кладём в QStash (это быстро и надёжнее делать до ответа 200)
+    if (update.message?.text) {
+      const qstash = new Client({ token: process.env.QSTASH_TOKEN! })
+      await qstash.publishJSON({
+        url: getProcessUrl(),
+        body: { update },
+      })
+      return res.status(200).json({ ok: true })
+    }
+
+    // message есть, но не текст (фото/стикер/голосовое и т.п.)
+    if (update.message?.chat?.id) {
+      await sendMessage(update.message.chat.id, "✍️ Напишите название места текстом")
+    }
+  } catch {
+    // намеренно молчим: Telegram получит 200, а диагностику добавим позже
+  }
+
+  // ВАЖНО: ответить Telegram 200 всегда
+  return res.status(200).json({ ok: true })
 }
 

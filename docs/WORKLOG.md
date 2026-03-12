@@ -44,3 +44,5 @@
 - Добавлена папка `public/` (пустая, через `.gitkeep`) — чтобы Vercel не падал с ошибкой “No Output Directory named public”.
 - Добавлен скрипт `set-webhook.js` для переустановки Telegram webhook (через `setWebhook` + `secret_token`).
 
+- Trigger commit for Vercel autodeploy (2026-03-12).
+

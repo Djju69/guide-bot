@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/webhook.ts": { "maxDuration": 10 },
+    "api/process.ts": { "maxDuration": 10 }
+  }
+}
+

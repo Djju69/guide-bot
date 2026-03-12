@@ -22,13 +22,7 @@ function getProcessUrl(): string {
 }
 
 export default async function handler(req: any, res: any) {
-  const secret =
-    req.headers?.["x-telegram-bot-api-secret-token"] ??
-    req.headers?.["X-Telegram-Bot-Api-Secret-Token"]
-
-  if (secret !== process.env.WEBHOOK_SECRET) {
-    return res.status(401).json({ error: "Unauthorized" })
-  }
+  console.log("Payload from Telegram:", req.body)
 
   const update = req.body as TelegramUpdate
 

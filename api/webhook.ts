@@ -7,7 +7,7 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const handleUpdate = webhookCallback(bot, "std/http")
+    const handleUpdate = webhookCallback(bot)
     return await handleUpdate(req, res)
   } catch (err) {
     console.error("Webhook Error:", err)
